@@ -14,7 +14,7 @@ import {
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { database, auth, logout, messaging } from "../../firebase/firebase";
-import Powerbutton from "../../src/power-icon.svg";
+import Powerbutton from "../../assets/power-icon.svg";
 import { PaymentCard } from "./PaymentCard";
 import { AddPaymentCard } from "./AddPaymentCard";
 import { getToken } from "firebase/messaging";
@@ -28,6 +28,7 @@ export const Home = () => {
 
   async function requestPermission() {
     const permission = await Notification.requestPermission();
+    console.log(permission);
     if (permission === "denied") {
       console.error("Notification permission denied");
       return;
@@ -65,7 +66,7 @@ export const Home = () => {
     }
   };
 
-  const fetchUserDocs = async (docId: string) => {
+  const fetchUserDocs = async () => {
     try {
       const q = query(collection(database, "payment"));
       const querySnapshot = await getDocs(q);
@@ -89,7 +90,7 @@ export const Home = () => {
   };
 
   useEffect(() => {
-    fetchUserDocs(docId);
+    fetchUserDocs();
     requestPermission();
   }, [docId]);
 
