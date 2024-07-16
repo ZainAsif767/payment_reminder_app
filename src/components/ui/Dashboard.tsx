@@ -26,6 +26,17 @@ export const Dashboard = () => {
   const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    fetchUserDocs();
+    requestPermission();
+  }, [docId]);
+
+  useEffect(() => {
+    if (loading) return;
+    if (!user) return navigate("/");
+    fetchUserName();
+  }, [user, loading]);
+
   async function requestPermission() {
     const permission = await Notification.requestPermission();
     console.log(permission);
@@ -81,23 +92,12 @@ export const Dashboard = () => {
         const res = d.data();
         return { ...res, id: d.id };
       });
-      setPayments((s) => [...userDocs]);
+      setPayments(() => [...userDocs]);
     } catch (err) {
       console.error(err);
       alert("An error occured while fetching user documents");
     }
   };
-
-  useEffect(() => {
-    fetchUserDocs();
-    requestPermission();
-  }, [docId]);
-
-  useEffect(() => {
-    if (loading) return;
-    if (!user) return navigate("/");
-    fetchUserName();
-  }, [user, loading]);
 
   const handleClick = () => {
     const signout = confirm("Do you want to signout?");

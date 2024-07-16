@@ -15,7 +15,7 @@ export const PaymentCard = ({ props, fetchUserDocs }) => {
   const handleDelete = () => {
     const docRef = doc(database, "payment", props.id);
     setDoc(docRef, { isDeleted: true }, { merge: true })
-      .then((docRef) => {
+      .then(() => {
         console.log("Deletion successful");
         fetchUserDocs();
       })
@@ -25,22 +25,24 @@ export const PaymentCard = ({ props, fetchUserDocs }) => {
   };
 
   return (
-    <div className="max-sm:w-full max-md:w-5/12 max-lg:w-2/6 max-xl:w-2/6 max-2xl:w-3/12 2xl:w-3/12 flex flex-col border-2 border-black rounded p-4 gap-2 ">
-      <h3 className="text-2xl font-bold">{title}</h3>
-      <h4 className="text-lg font-semibold">{description}</h4>
-      <h4 className="text-md font-semibold">
+    <div className="max-sm:w-full max-md:w-5/12 max-lg:w-2/6 max-xl:w-2/6 max-2xl:w-3/12 2xl:w-3/12 flex flex-col border-2 border-black rounded p-6 gap-4 bg-gray-100 shadow-lg">
+      <h3 className="text-2xl font-bold text-gray-800">Title: {title}</h3>
+      <h4 className="text-lg font-semibold text-gray-700">
+        Description: {description}
+      </h4>
+      <h4 className="text-md font-semibold text-gray-600">
         Payment Status: {paymentStatus ? "Paid" : "Unpaid"}
       </h4>
-      <p>{transformedDate}</p>
-      <div className="w-full flex justify-between mt-2">
+      <p className="text-gray-500">Date: {transformedDate}</p>
+      <div className="w-full flex justify-between mt-4">
         <button
-          className="bg-green-600 border-black border-2 py-1 px-6 rounded"
-          onClick={() => setShowModal((s) => !s)}
+          className="bg-green-600 hover:bg-green-700 text-white border-black border-2 py-2 px-6 rounded transition duration-200"
+          onClick={() => setShowModal((show) => !show)}
         >
           Edit
         </button>
         <button
-          className="bg-red-500 border-black border-2 py-1 px-6 rounded"
+          className="bg-red-500 hover:bg-red-600 text-white border-black border-2 py-2 px-6 rounded transition duration-200"
           onClick={() => handleDelete()}
         >
           Delete

@@ -5,7 +5,6 @@ import SignInSide from "./components/ui/login";
 import { Dashboard } from "./components/ui/Dashboard";
 
 function App() {
-  console.log("route");
   return (
     <div className="app">
       <main className="#">
