@@ -19,7 +19,7 @@ import { PaymentCard } from "./PaymentCard";
 import { AddPaymentCard } from "./AddPaymentCard";
 import { getToken } from "firebase/messaging";
 
-export const Home = () => {
+export const Dashboard = () => {
   const [name, setName] = useState("");
   const [docId, setDocId] = useState<string>("");
   const [payments, setPayments] = useState([]);
@@ -40,7 +40,8 @@ export const Home = () => {
     if (docId)
       try {
         const token = await getToken(messaging, {
-          vapidKey: "Key here",
+          vapidKey:
+            "BF1tVVetk1cdNgYb8Hfaa_fzVOuNGmWYkOIILgxF7CEKvYXxOrb2eXOIA34mcU2TJcAUTqdgMLAhQuR-ukHB2gg",
         });
         localStorage.setItem("firebaseMessagingToken", token);
         const docRef = doc(database, `users/${docId}`);
@@ -69,20 +70,18 @@ export const Home = () => {
   const fetchUserDocs = async () => {
     try {
       const q = query(collection(database, "payment"));
-      const querySnapshot = await getDocs(q);
-
-      const userDocs: QueryDocumentSnapshot<DocumentData>[] = [];
-      querySnapshot.forEach((doc) => {
-        if (doc.data().user === `/user/${docId}` && !doc.data().isDeleted) {
-          userDocs.push(doc);
-        }
+      const doc = await getDocs(q);
+      let userDocs: {
+        data: any;
+        id: string;
+      }[] = doc.docs.filter(
+        (d) => d.data().user === `/users/${docId}` && !d.data().isDeleted
+      );
+      userDocs = userDocs.map((d) => {
+        const res = d.data();
+        return { ...res, id: d.id };
       });
-
-      const formattedUserDocs = userDocs.map((doc) => {
-        const data = doc.data();
-        return { ...data, id: doc.id };
-      });
-      setPayments(formattedUserDocs);
+      setPayments((s) => [...userDocs]);
     } catch (err) {
       console.error(err);
       alert("An error occured while fetching user documents");
