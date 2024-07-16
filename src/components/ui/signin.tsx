@@ -86,7 +86,6 @@ export default function SignInSide() {
           md={7}
           sx={{
             backgroundImage: signinBackgroundImage,
-
             backgroundColor: (t) =>
               t.palette.mode === "light"
                 ? t.palette.grey[50]

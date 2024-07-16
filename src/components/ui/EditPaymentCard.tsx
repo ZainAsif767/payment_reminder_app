@@ -11,16 +11,16 @@ export const EditPaymentCard = ({
   const [title, setTitle] = useState(props.title);
   const [desc, setDesc] = useState(props.description);
   const [paymentStatus, setPaymentStatus] = useState(props.paymentStatus);
-  const givenDate = new Date(props.dueDate?.seconds);
-  let day = givenDate.getDate();
-  let month = givenDate.getMonth() + 1;
-  const year = givenDate.getFullYear();
+  const [date, setDate] = useState(() => {
+    const givenDate = new Date(props.dueDate?.seconds);
+    const year = givenDate.getFullYear();
+    let month = givenDate.getMonth() + 1;
+    if (month < 10) month = `0${month}`;
+    let day = givenDate.getDate();
+    if (day < 10) day = `0${day}`;
+    return `${year}-${month}-${day}`;
+  });
 
-  if (month < 10) month = 0 + month;
-  if (day < 10) day = 0 + day;
-
-  const finalDate = year + "-" + month + "-" + day;
-  const [date, setDate] = useState(finalDate);
   const handleSubmit = async (e) => {
     e.preventDefault();
     setShowModal(false);
