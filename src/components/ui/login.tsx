@@ -1,3 +1,4 @@
+/* eslint-disable no-extra-boolean-cast */
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -12,6 +13,9 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import signinBackgroundImage from "../../assets/Images";
+import { useNavigate } from "react-router-dom";
+import { loginInWithEmailAndPassword } from "../../firebase/firebase";
 
 function Copyright(props: any) {
   return (
@@ -23,7 +27,7 @@ function Copyright(props: any) {
     >
       {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        Payment Reminder App
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -34,13 +38,21 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function SignInSide() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const email = data.get("email") as string;
+    const password = data.get("password") as string;
+
+    const res = await loginInWithEmailAndPassword(email, password);
+
+    if (res?.token) {
+      navigate("/dashboard");
+    } else {
+      alert("Login Failed");
+    }
   };
 
   return (
@@ -53,7 +65,7 @@ export default function SignInSide() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: "../../assets/Images/sign-in-side-bg.png",
+            backgroundImage: signinBackgroundImage,
 
             backgroundColor: (t) =>
               t.palette.mode === "light"
@@ -124,7 +136,7 @@ export default function SignInSide() {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  <Link href="/signup" variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>

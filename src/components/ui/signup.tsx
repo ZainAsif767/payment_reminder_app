@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { registerWithEmailAndPassword, auth } from "../../firebase/firebase";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,6 +14,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useEffect } from "react";
 
 function Copyright(props: any) {
   return (
@@ -22,7 +26,7 @@ function Copyright(props: any) {
     >
       {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        Payment Reminder App
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -32,19 +36,33 @@ function Copyright(props: any) {
 
 const defaultTheme = createTheme();
 export default function SignUp() {
+  const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (loading) return;
+    if (user) alert("user has been registered");
+    if (error) console.error(error);
+  }, [loading, user, error]);
+
   const handleSignUp = () => {
-    navigate("/signIn");
+    navigate("/");
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const name = data.get("name") as string;
+    const email = data.get("email") as string;
+    const password = data.get("password") as string;
+
+    const res = await registerWithEmailAndPassword(name, email, password);
+
+    if (res?.path) {
+      navigate("/");
+    } else {
+      alert("Sign up failed!");
+    }
   };
 
   return (
@@ -72,25 +90,15 @@ export default function SignUp() {
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   autoComplete="given-name"
-                  name="firstName"
+                  name="name"
                   required
                   fullWidth
-                  id="firstName"
-                  label="First Name"
+                  id="name"
+                  label="Name"
                   autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -127,7 +135,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="/signIn" variant="body2">
+                <Link href="/" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>
