@@ -15,6 +15,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useEffect } from "react";
+import { MySwal } from "../utils/swal";
 
 function Copyright(props: any) {
   return (
@@ -41,13 +42,25 @@ export default function SignUp() {
 
   useEffect(() => {
     if (loading) return;
-    if (user) alert("user has been registered");
-    if (error) console.error(error);
-  }, [loading, user, error]);
-
-  const handleSignUp = () => {
-    navigate("/");
-  };
+    if (user) {
+      MySwal.fire({
+        icon: "success",
+        title: "Registration Successful!",
+        text: "You can now sign in with your credentials.",
+        timer: 2000,
+      }).then(() => {
+        navigate("/signin");
+      });
+    }
+    if (error) {
+      MySwal.fire({
+        icon: "error",
+        title: "Registration Failed!",
+        text: "An error occurred while registering. Please try again later.",
+      });
+      console.error("Registration Error: ", error);
+    }
+  }, [loading, user, error, navigate]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -56,12 +69,15 @@ export default function SignUp() {
     const email = data.get("email") as string;
     const password = data.get("password") as string;
 
-    const res = await registerWithEmailAndPassword(name, email, password);
-
-    if (res?.path) {
-      navigate("/");
-    } else {
-      alert("Sign up failed!");
+    try {
+      await registerWithEmailAndPassword(name, email, password);
+    } catch (error) {
+      MySwal.fire({
+        icon: "error",
+        title: "Registration Failed!",
+        text: "An error occurred while registering. Please try again later.",
+      });
+      console.error(error);
     }
   };
 
@@ -129,7 +145,6 @@ export default function SignUp() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              onClick={handleSignUp}
             >
               Sign Up
             </Button>

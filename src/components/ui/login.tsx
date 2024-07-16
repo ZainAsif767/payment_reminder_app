@@ -16,6 +16,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import signinBackgroundImage from "../../assets/Images";
 import { useNavigate } from "react-router-dom";
 import { loginInWithEmailAndPassword } from "../../firebase/firebase";
+import { MySwal } from "../utils/swal";
 
 function Copyright(props: any) {
   return (
@@ -46,12 +47,33 @@ export default function SignInSide() {
     const email = data.get("email") as string;
     const password = data.get("password") as string;
 
-    const res = await loginInWithEmailAndPassword(email, password);
+    try {
+      const res = await loginInWithEmailAndPassword(email, password);
+      console.log(res);
 
-    if (res?.token) {
-      navigate("/dashboard");
-    } else {
-      alert("Login Failed");
+      if (res?.token) {
+        MySwal.fire({
+          icon: "success",
+          title: "Login Successful!",
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(() => {
+          navigate("/dashboard");
+        });
+      } else {
+        MySwal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: "Invalid credentials. Please try again.",
+        });
+      }
+    } catch (error) {
+      console.error("Login Error:", error);
+      MySwal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: "An error occurred during login. Please try again later.",
+      });
     }
   };
 

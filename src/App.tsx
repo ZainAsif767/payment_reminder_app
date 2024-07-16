@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import SignUp from "./components/ui/signup";
 import SignInSide from "./components/ui/login";
@@ -10,9 +10,10 @@ function App() {
       <main className="#">
         <div className="#">
           <Routes>
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/" element={<Navigate to="/signin" />} />
+            <Route path="/signin" element={<SignInSide />} />
             <Route path="/signup" element={<SignUp />} />
-            <Route path="/" element={<SignInSide />} />
+            <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
         </div>
       </main>
