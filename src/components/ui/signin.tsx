@@ -4,8 +4,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
@@ -49,7 +47,6 @@ export default function SignInSide() {
 
     try {
       const res = await loginInWithEmailAndPassword(email, password);
-      console.log(res);
 
       if (res?.token) {
         MySwal.fire({
@@ -65,6 +62,7 @@ export default function SignInSide() {
           icon: "error",
           title: "Login Failed",
           text: "Invalid credentials. Please try again.",
+          timer: 3000,
         });
       }
     } catch (error) {
@@ -139,10 +137,7 @@ export default function SignInSide() {
                 id="password"
                 autoComplete="current-password"
               />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
+
               <Button
                 type="submit"
                 fullWidth

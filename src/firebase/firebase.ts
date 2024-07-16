@@ -5,15 +5,14 @@ import { createUserWithEmailAndPassword, getAuth, sendPasswordResetEmail, signIn
 import { getMessaging } from "firebase/messaging";
 
 const firebaseConfig = {
-    apiKey: import.meta.env.FIRE_BASE_API_KEY,
-    authDomain: import.meta.env.FIRE_BASE_AUTH_DOMAIN,
-    projectId: import.meta.env.FIRE_BASE_PROJECT_ID,
-    storageBucket: import.meta.env.FIRE_BASE_STORAGE_BUCKET,
-    messagingSenderId: import.meta.env.FIRE_BASE_MESSAGING_SENDER_ID,
-    appId: import.meta.env.FIRE_BASE_APP_ID,
-    measurementId: import.meta.env.FIRE_BASE_MEASUREMENT_ID
+    apiKey: "AIzaSyDSxYae6HwLhzOSv7bAsG8KP5NrZ-PynDw",
+    authDomain: "payment-reminder-app-b1f7c.firebaseapp.com",
+    projectId: "payment-reminder-app-b1f7c",
+    storageBucket: "payment-reminder-app-b1f7c.appspot.com",
+    messagingSenderId: "1046232119776",
+    appId: "1:1046232119776:web:65d881bc8981924fd39385",
+    measurementId: "G-0EEJSPRDPX"
 };
-
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -29,7 +28,6 @@ const loginInWithEmailAndPassword = async (email: any, password: any) => {
         return { user: userCredentials.user, token }
     } catch (error) {
         console.error(error)
-        alert(error.message)
     }
 }
 
