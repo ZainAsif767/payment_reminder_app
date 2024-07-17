@@ -43,8 +43,9 @@ export default function Dashboard() {
         navigate("/");
       });
     }
+    if (error) console.error(error.message);
     fetchUserName();
-  }, [user, loading]);
+  }, [user, loading, error]);
 
   async function requestPermission() {
     const permission = await Notification.requestPermission();
