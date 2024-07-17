@@ -27,7 +27,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchUserDocs();
-    requestPermission();
+    requestPermission(docId);
   }, [docId]);
 
   useEffect(() => {
@@ -47,29 +47,46 @@ export default function Dashboard() {
     fetchUserName();
   }, [user, loading, error]);
 
-  async function requestPermission() {
+  async function requestPermission(docId) {
     const permission = await Notification.requestPermission();
     console.log(permission);
     if (permission === "denied") {
-      console.error("Notification permission denied");
+      toast.fire({
+        icon: "warning",
+        text: "Notification permission denied.",
+      });
       return;
     }
     if (permission === "default") {
-      console.warn("User did not grant Permission");
+      toast.fire({
+        icon: "warning",
+        text: "Notification permission denied.",
+      });
       return;
     }
-    if (docId)
+    if (docId) {
       try {
+        console.log("Requesting token...");
         const token = await getToken(messaging, {
           vapidKey:
             "BF1tVVetk1cdNgYb8Hfaa_fzVOuNGmWYkOIILgxF7CEKvYXxOrb2eXOIA34mcU2TJcAUTqdgMLAhQuR-ukHB2gg",
         });
+        console.log("Token received: ", token);
         localStorage.setItem("firebaseMessagingToken", token);
         const docRef = doc(database, `users/${docId}`);
-        const res = await setDoc(docRef, { fcmToken: token }, { merge: true });
+        await setDoc(docRef, { fcmToken: token }, { merge: true });
+        toast.fire({
+          icon: "success",
+          text: "Permission granted, you will get notifications about unpaid payments.",
+        });
       } catch (error) {
-        console.error(error);
+        console.error("Error getting permission for notifications:", error);
+        toast.fire({
+          icon: "error",
+          text: "An error occurred while requesting notification permissions.",
+        });
       }
+    }
   }
 
   const fetchUserName = async () => {
@@ -129,8 +146,8 @@ export default function Dashboard() {
   return (
     <div className="w-full min-h-screen	 absolute bg-slate-400">
       <header className="w-full bg-slate-800 py-2 text-lg text-gray-100 capitalize flex justify-between items-center">
-        <span className="pl-6 mr-5">Welcome, {name?.split(" ")[0]}</span>
-        <div className="flex content-center items-center w-full">
+        <span className="pl-6">Welcome, {name?.split(" ")[0]}</span>
+        <div className="contents content-center items-center w-full">
           <AddPaymentCard
             docId={`users/${docId}`}
             fetchUserDocs={fetchUserDocs}
