@@ -15,8 +15,40 @@ import { database, auth, logout, messaging } from "../../firebase/firebase";
 import Powerbutton from "../../assets/power-icon.svg";
 import { PaymentCard } from "./PaymentCard";
 import { AddPaymentCard } from "./AddPaymentCard";
-import { getToken } from "firebase/messaging";
+import { getToken, onMessage } from "firebase/messaging";
 import { MySwal, toast } from "../utils/swal";
+
+async function requestPermission(docId) {
+  const permission = await Notification.requestPermission();
+  if (permission === "denied" || permission === "default") {
+    toast.fire({
+      icon: "warning",
+      text: "Notification permission denied.",
+    });
+    return;
+  }
+  if (docId) {
+    try {
+      const token = await getToken(messaging, {
+        vapidKey:
+          "BF1tVVetk1cdNgYb8Hfaa_fzVOuNGmWYkOIILgxF7CEKvYXxOrb2eXOIA34mcU2TJcAUTqdgMLAhQuR-ukHB2gg",
+      });
+      localStorage.setItem("firebaseMessagingToken", token);
+      const docRef = doc(database, `users/${docId}`);
+      await setDoc(docRef, { fcmToken: token }, { merge: true });
+      toast.fire({
+        icon: "success",
+        text: "Permission granted, you will get notifications about unpaid payments.",
+      });
+    } catch (error) {
+      console.error("Error getting permission for notifications:", error);
+      toast.fire({
+        icon: "error",
+        text: "An error occurred while requesting notification permissions.",
+      });
+    }
+  }
+}
 
 export default function Dashboard() {
   const [name, setName] = useState("");
@@ -46,48 +78,6 @@ export default function Dashboard() {
     if (error) console.error(error.message);
     fetchUserName();
   }, [user, loading, error]);
-
-  async function requestPermission(docId) {
-    const permission = await Notification.requestPermission();
-    console.log(permission);
-    if (permission === "denied") {
-      toast.fire({
-        icon: "warning",
-        text: "Notification permission denied.",
-      });
-      return;
-    }
-    if (permission === "default") {
-      toast.fire({
-        icon: "warning",
-        text: "Notification permission denied.",
-      });
-      return;
-    }
-    if (docId) {
-      try {
-        console.log("Requesting token...");
-        const token = await getToken(messaging, {
-          vapidKey:
-            "BF1tVVetk1cdNgYb8Hfaa_fzVOuNGmWYkOIILgxF7CEKvYXxOrb2eXOIA34mcU2TJcAUTqdgMLAhQuR-ukHB2gg",
-        });
-        console.log("Token received: ", token);
-        localStorage.setItem("firebaseMessagingToken", token);
-        const docRef = doc(database, `users/${docId}`);
-        await setDoc(docRef, { fcmToken: token }, { merge: true });
-        toast.fire({
-          icon: "success",
-          text: "Permission granted, you will get notifications about unpaid payments.",
-        });
-      } catch (error) {
-        console.error("Error getting permission for notifications:", error);
-        toast.fire({
-          icon: "error",
-          text: "An error occurred while requesting notification permissions.",
-        });
-      }
-    }
-  }
 
   const fetchUserName = async () => {
     try {
