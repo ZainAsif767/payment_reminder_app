@@ -2,6 +2,7 @@
 import { setDoc, doc } from "firebase/firestore";
 import { database } from "../../firebase/firebase";
 import { useEffect, useState } from "react";
+import { toast } from "../utils/swal";
 
 export const EditPaymentCard = ({
   props,
@@ -38,6 +39,7 @@ export const EditPaymentCard = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     setShowModal(false);
+
     try {
       const changingData = {
         title,
@@ -46,11 +48,21 @@ export const EditPaymentCard = ({
         dueDate: new Date(date),
       };
       const docRef = doc(database, "payment", props.id);
-
-      const res = await setDoc(docRef, changingData, { merge: true });
+      await setDoc(docRef, changingData, { merge: true });
       fetchUserDocs();
-    } catch (e) {
-      console.error(e);
+
+      toast.fire({
+        icon: "success",
+        text: "Payment Updated Successfully!",
+      });
+    } catch (err) {
+      console.error(err.message);
+
+      toast.fire({
+        icon: "error",
+        text: "Failed to update payment details.",
+        confirmButtonColor: "#f44336",
+      });
     }
   };
 

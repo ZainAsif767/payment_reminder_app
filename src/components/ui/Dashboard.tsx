@@ -16,7 +16,7 @@ import Powerbutton from "../../assets/power-icon.svg";
 import { PaymentCard } from "./PaymentCard";
 import { AddPaymentCard } from "./AddPaymentCard";
 import { getToken } from "firebase/messaging";
-import { MySwal } from "../utils/swal";
+import { MySwal, toast } from "../utils/swal";
 
 export default function Dashboard() {
   const [name, setName] = useState("");
@@ -107,14 +107,6 @@ export default function Dashboard() {
       alert("An error occured while fetching user documents");
     }
   };
-
-  const toast = MySwal.mixin({
-    toast: true,
-    position: "top-end",
-    timer: 3000,
-    timerProgressBar: true,
-    showConfirmButton: false,
-  });
 
   const handleClick = () => {
     MySwal.fire({

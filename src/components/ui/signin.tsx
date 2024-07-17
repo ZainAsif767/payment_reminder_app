@@ -13,7 +13,10 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import signinBackgroundImage from "../../assets/Images";
 import { useNavigate } from "react-router-dom";
-import { loginInWithEmailAndPassword } from "../../firebase/firebase";
+import {
+  loginInWithEmailAndPassword,
+  sendPasswordReset,
+} from "../../firebase/firebase";
 import { MySwal } from "../utils/swal";
 
 function Copyright(props: any) {
@@ -38,6 +41,7 @@ const defaultTheme = createTheme();
 
 export default function SignInSide() {
   const navigate = useNavigate();
+  const [email, setEmail] = React.useState("");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -53,7 +57,8 @@ export default function SignInSide() {
           icon: "success",
           title: "Login Successful!",
           showConfirmButton: false,
-          timer: 1500,
+          timer: 2000,
+          timerProgressBar: true,
         }).then(() => {
           navigate("/dashboard");
         });
@@ -72,6 +77,14 @@ export default function SignInSide() {
         title: "Login Failed",
         text: "An error occurred during login. Please try again later.",
       });
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    try {
+      await sendPasswordReset(email);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -125,6 +138,8 @@ export default function SignInSide() {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
               <TextField
                 margin="normal"
@@ -147,7 +162,7 @@ export default function SignInSide() {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link variant="body2" onClick={handleForgotPassword}>
                     Forgot password?
                   </Link>
                 </Grid>
