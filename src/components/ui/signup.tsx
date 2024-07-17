@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { registerWithEmailAndPassword, auth } from "../../firebase/firebase";
+import {
+  registerWithEmailAndPassword,
+  auth,
+  loginWithGoogle,
+} from "../../firebase/firebase";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -15,7 +19,8 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useEffect } from "react";
-import { MySwal } from "../utils/swal";
+import { MySwal, toast } from "../utils/swal";
+import GoogleIcon from "../../assets/google.svg";
 
 function Copyright(props: any) {
   return (
@@ -79,6 +84,18 @@ export default function SignUp() {
         text: "An error occurred while registering. Please try again later.",
       });
       console.error(error);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await loginWithGoogle();
+      if (loginWithGoogle) {
+        toast.fire({ icon: "success", text: "Registered Successfully" });
+        navigate("/dashboard");
+      }
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -148,6 +165,30 @@ export default function SignUp() {
               sx={{ mt: 3, mb: 2 }}
             >
               Sign Up
+            </Button>
+            <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+              <Box sx={{ flexGrow: 1, height: 1, bgcolor: "divider" }} />
+              <Box sx={{ mx: 2 }}>
+                <Typography variant="body2" color="text.secondary">
+                  or continue with
+                </Typography>
+              </Box>
+              <Box sx={{ flexGrow: 1, height: 1, bgcolor: "divider" }} />
+            </Box>
+            <Button
+              fullWidth
+              variant="contained"
+              sx={{ mb: 2 }}
+              onClick={handleGoogleLogin}
+              startIcon={
+                <img
+                  src={GoogleIcon}
+                  alt="icon"
+                  style={{ width: 24, height: 24 }}
+                />
+              }
+            >
+              Google
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>

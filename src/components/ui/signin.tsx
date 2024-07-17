@@ -55,21 +55,22 @@ export default function SignInSide() {
       const res = await loginInWithEmailAndPassword(email, password);
 
       if (res?.token) {
-        MySwal.fire({
-          icon: "success",
-          title: "Login Successful!",
-          showConfirmButton: false,
-          timer: 2000,
-          timerProgressBar: true,
-        }).then(() => {
-          navigate("/dashboard");
-        });
+        toast
+          .fire({
+            icon: "success",
+            title: "Login Successful!",
+            timer: 1500,
+            timerProgressBar: true,
+          })
+          .then(() => {
+            navigate("/dashboard");
+          });
       } else {
-        MySwal.fire({
+        toast.fire({
           icon: "error",
-          title: "Login Failed",
           text: "Invalid credentials. Please try again.",
           timer: 3000,
+          timerProgressBar: true,
         });
       }
     } catch (error) {
@@ -98,7 +99,10 @@ export default function SignInSide() {
   const handleGoogleLogin = async () => {
     try {
       await loginWithGoogle();
-      if (loginWithGoogle) navigate("/dashboard");
+      if (loginWithGoogle) {
+        toast.fire({ icon: "success", text: "Logged In successfully" });
+        navigate("/dashboard");
+      }
     } catch (err) {
       console.error(err);
     }
