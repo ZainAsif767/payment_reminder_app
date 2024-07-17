@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { initializeApp } from "firebase/app";
 import { addDoc, collection, getFirestore } from "firebase/firestore";
-import { createUserWithEmailAndPassword, getAuth, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, User, UserCredential } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, User, UserCredential } from "firebase/auth";
 import { getMessaging } from "firebase/messaging";
 
 const firebaseConfig = {
@@ -22,7 +22,6 @@ const messaging = getMessaging(app);
 
 const loginInWithEmailAndPassword = async (email: any, password: any) => {
     try {
-        console.log(email, password);
         const userCredentials: UserCredential = await signInWithEmailAndPassword(auth, email, password);
         const token = await userCredentials.user.getIdToken();
         return { user: userCredentials.user, token }
@@ -33,7 +32,6 @@ const loginInWithEmailAndPassword = async (email: any, password: any) => {
 
 const registerWithEmailAndPassword = async (name: any, email: any, password: any) => {
     try {
-        console.log(email, name, password)
         const res = await createUserWithEmailAndPassword(auth, email, password)
         const user = res.user;
         return await addDoc(collection(database, "users"), {
@@ -48,10 +46,21 @@ const registerWithEmailAndPassword = async (name: any, email: any, password: any
     }
 }
 
+const loginWithGoogle = async () => {
+    try {
+        const provider = new GoogleAuthProvider();
+        const res = await signInWithPopup(auth, provider);
+        const user = res.user;
+        const token = await user.getIdToken();
+        return { user, token }
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 const sendPasswordReset = async (email: any) => {
     try {
         await sendPasswordResetEmail(auth, email);
-        alert("Reset Password Link sent!")
     } catch (error) {
         console.error(error)
         alert(error.message)
@@ -63,5 +72,5 @@ const logout = () => {
 }
 
 export {
-    auth, database, loginInWithEmailAndPassword, registerWithEmailAndPassword, sendPasswordReset, logout, messaging
+    auth, database, loginInWithEmailAndPassword, loginWithGoogle, registerWithEmailAndPassword, sendPasswordReset, logout, messaging
 }

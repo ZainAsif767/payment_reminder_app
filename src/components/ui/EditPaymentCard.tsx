@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { setDoc, doc } from "firebase/firestore";
 import { database } from "../../firebase/firebase";
@@ -34,7 +35,7 @@ export const EditPaymentCard = ({
     if (day < 10) day = `0${day}`;
     const minDate = `${year}-${month}-${day}`;
     setMinDate(minDate);
-  }, [date]);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

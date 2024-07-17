@@ -15,9 +15,11 @@ import signinBackgroundImage from "../../assets/Images";
 import { useNavigate } from "react-router-dom";
 import {
   loginInWithEmailAndPassword,
+  loginWithGoogle,
   sendPasswordReset,
 } from "../../firebase/firebase";
-import { MySwal } from "../utils/swal";
+import { MySwal, toast } from "../utils/swal";
+import GoogleIcon from "../../assets/google.svg";
 
 function Copyright(props: any) {
   return (
@@ -83,6 +85,20 @@ export default function SignInSide() {
   const handleForgotPassword = async () => {
     try {
       await sendPasswordReset(email);
+      toast.fire({
+        icon: "success",
+        text: "Reset Password Link sent!",
+        timerProgressBar: true,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await loginWithGoogle();
+      if (loginWithGoogle) navigate("/dashboard");
     } catch (err) {
       console.error(err);
     }
@@ -156,9 +172,33 @@ export default function SignInSide() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 3, mb: 1 }}
               >
                 Sign In
+              </Button>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                <Box sx={{ flexGrow: 1, height: 1, bgcolor: "divider" }} />
+                <Box sx={{ mx: 2 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    or continue with
+                  </Typography>
+                </Box>
+                <Box sx={{ flexGrow: 1, height: 1, bgcolor: "divider" }} />
+              </Box>
+              <Button
+                fullWidth
+                variant="contained"
+                sx={{ mb: 2 }}
+                onClick={handleGoogleLogin}
+                startIcon={
+                  <img
+                    src={GoogleIcon}
+                    alt="icon"
+                    style={{ width: 24, height: 24 }}
+                  />
+                }
+              >
+                Google
               </Button>
               <Grid container>
                 <Grid item xs>
