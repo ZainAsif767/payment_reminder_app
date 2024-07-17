@@ -16,6 +16,7 @@ import Powerbutton from "../../assets/power-icon.svg";
 import { PaymentCard } from "./PaymentCard";
 import { AddPaymentCard } from "./AddPaymentCard";
 import { getToken } from "firebase/messaging";
+import { MySwal } from "../utils/swal";
 
 export const Dashboard = () => {
   const [name, setName] = useState("");
@@ -98,11 +99,24 @@ export const Dashboard = () => {
   };
 
   const handleClick = () => {
-    const signout = confirm("Do you want to signout?");
-    if (signout) {
-      logout();
-      navigate("/");
-    }
+    MySwal.fire({
+      title: "Are you sure?",
+      text: "Do you want to sign out?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logout();
+        navigate("/");
+        MySwal.fire({
+          title: "Signed Out!",
+          icon: "success",
+        });
+      }
+    });
   };
 
   return (

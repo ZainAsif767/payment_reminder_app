@@ -25,7 +25,6 @@ export const AddPaymentCard = ({ docId, fetchUserDocs }) => {
       return;
     }
 
-    console.log(dueDate);
     try {
       await addDoc(collection(database, "payment"), {
         title: title,

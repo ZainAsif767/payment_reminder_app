@@ -8,9 +8,9 @@ export const PaymentCard = ({ props, fetchUserDocs }) => {
   const { title, description, dueDate, paymentStatus } = props;
   const [showModal, setShowModal] = useState(false);
 
-  const transformedDate = new Date(dueDate?.seconds * 1000)
-    .toString()
-    .split(" GMT")[0];
+  const transformedDate = new Date(
+    dueDate?.seconds * 1000
+  ).toLocaleDateString();
 
   const handleDelete = () => {
     const docRef = doc(database, "payment", props.id);
