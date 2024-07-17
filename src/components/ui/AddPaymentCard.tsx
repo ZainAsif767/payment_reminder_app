@@ -64,7 +64,7 @@ export const AddPaymentCard = ({ docId, fetchUserDocs }) => {
     <>
       <button
         onClick={() => setShowModal(true)}
-        className="bg-slate-700 hover:bg-slate-600 max-sm:w-11/12 max-md:w-5/12 max-lg:w-2/6 max-xl:w-2/6 max-2xl:w-3/12 2xl:w-3/12 flex flex-col border-2 border-black rounded p-4 gap-2"
+        className="bg-orange-600 hover:bg-orange-400 max-sm:w-11/12 max-md:w-5/12 max-lg:w-2/6 max-xl:w-2/6 max-2xl:w-3/12 2xl:w-3/12 flex flex-col border-2 border-black rounded p-4 gap-2"
       >
         <h1 className="text-xl uppercase font-extrabold mx-auto my-auto">
           Add payment
