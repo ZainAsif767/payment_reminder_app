@@ -12,7 +12,7 @@ export const AddPaymentCard = ({ docId, fetchUserDocs }) => {
   const [minDate, setMinDate] = useState("");
 
   useEffect(() => {
-    if (!dateRef.current.value) return;
+    if (!dateRef.current) return;
     const currentDate = new Date();
     const year = currentDate.getFullYear();
     let month: number | string = currentDate.getMonth() + 1;
