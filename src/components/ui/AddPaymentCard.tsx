@@ -1,5 +1,5 @@
 import { addDoc, collection } from "firebase/firestore";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { database } from "../../firebase/firebase";
 import { MySwal } from "../utils/swal";
 
@@ -9,6 +9,20 @@ export const AddPaymentCard = ({ docId, fetchUserDocs }) => {
   const descRef = useRef<HTMLTextAreaElement>(null);
   const paymentRef = useRef<HTMLInputElement>(null);
   const dateRef = useRef<HTMLInputElement>(null);
+  const [minDate, setMinDate] = useState("");
+
+  useEffect(() => {
+    if (!dateRef.current.value) return;
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    let month: number | string = currentDate.getMonth() + 1;
+    let day: number | string = currentDate.getDate();
+    if (month < 10) month = `0${month}`;
+    if (day < 10) day = `0${day}`;
+    const minDate = `${year}-${month}-${day}`;
+    setMinDate(minDate);
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setShowModal(false);
@@ -133,6 +147,7 @@ export const AddPaymentCard = ({ docId, fetchUserDocs }) => {
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Select date"
                         ref={dateRef}
+                        min={minDate}
                       />
                     </div>
                     <div className="text-white mt-4 -mb-10">

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { setDoc, doc } from "firebase/firestore";
 import { database } from "../../firebase/firebase";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const EditPaymentCard = ({
   props,
@@ -12,6 +12,7 @@ export const EditPaymentCard = ({
   const [title, setTitle] = useState(props.title);
   const [desc, setDesc] = useState(props.description);
   const [paymentStatus, setPaymentStatus] = useState(props.paymentStatus);
+  const [minDate, setMinDate] = useState("");
   const [date, setDate] = useState(() => {
     const givenDate = new Date(props.dueDate?.seconds * 1000);
     const year = givenDate.getFullYear();
@@ -21,6 +22,18 @@ export const EditPaymentCard = ({
     if (day < 10) day = `0${day}`;
     return `${year}-${month}-${day}`;
   });
+
+  useEffect(() => {
+    if (!date) return;
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    let month: number | string = currentDate.getMonth() + 1;
+    let day: number | string = currentDate.getDate();
+    if (month < 10) month = `0${month}`;
+    if (day < 10) day = `0${day}`;
+    const minDate = `${year}-${month}-${day}`;
+    setMinDate(minDate);
+  }, [date]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -122,6 +135,7 @@ export const EditPaymentCard = ({
                         placeholder="Select date"
                         onChange={(e) => setDate(() => e.target.value)}
                         defaultValue={date}
+                        min={minDate}
                       />
                     </div>
                     <div className="text-white mt-4 -mb-10">
