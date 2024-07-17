@@ -26,10 +26,8 @@ export const PaymentCard = ({ props, fetchUserDocs }) => {
 
   return (
     <div className="max-sm:w-full max-md:w-5/12 max-lg:w-2/6 max-xl:w-2/6 max-2xl:w-3/12 2xl:w-3/12 flex flex-col border-2 border-black rounded p-6 gap-4 bg-gray-100 shadow-lg">
-      <h3 className="text-2xl font-bold text-gray-800">Title: {title}</h3>
-      <h4 className="text-lg font-semibold text-gray-700">
-        Description: {description}
-      </h4>
+      <h3 className="text-3xl text-center font-bold text-gray-800"> {title}</h3>
+      <h4 className="text-lg font-semibold text-gray-700">{description}</h4>
       <h4 className="text-md font-semibold text-gray-600">
         Payment Status: {paymentStatus ? "Paid" : "Unpaid"}
       </h4>

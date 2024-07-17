@@ -32,7 +32,17 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (loading) return;
-    if (!user) return navigate("/");
+    if (!user) {
+      MySwal.fire({
+        icon: "error",
+        title: "Access Denied",
+        text: "you must sign in to continue",
+        timer: 10000,
+        timerProgressBar: true,
+      }).then(() => {
+        navigate("/");
+      });
+    }
     fetchUserName();
   }, [user, loading]);
 
@@ -73,7 +83,6 @@ export default function Dashboard() {
       setDocId(() => doc.docs[0]?.id);
     } catch (err) {
       console.error(err);
-      alert("An error occured while fetching user data");
     }
   };
 
@@ -98,6 +107,14 @@ export default function Dashboard() {
     }
   };
 
+  const toast = MySwal.mixin({
+    toast: true,
+    position: "top-end",
+    timer: 3000,
+    timerProgressBar: true,
+    showConfirmButton: false,
+  });
+
   const handleClick = () => {
     MySwal.fire({
       title: "Are you sure?",
@@ -111,10 +128,7 @@ export default function Dashboard() {
       if (result.isConfirmed) {
         logout();
         navigate("/");
-        MySwal.fire({
-          title: "Signed Out!",
-          icon: "success",
-        });
+        toast.fire("", "signed out successfully!");
       }
     });
   };

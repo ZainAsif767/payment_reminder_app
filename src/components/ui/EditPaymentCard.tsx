@@ -25,7 +25,6 @@ export const EditPaymentCard = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     setShowModal(false);
-    console.log(paymentStatus);
     try {
       const changingData = {
         title,

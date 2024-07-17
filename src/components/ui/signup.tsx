@@ -47,7 +47,8 @@ export default function SignUp() {
         icon: "success",
         title: "Registration Successful!",
         text: "You can now sign in with your credentials.",
-        timer: 2000,
+        timer: 3000,
+        timerProgressBar: true,
       }).then(() => {
         navigate("/signin");
       });
