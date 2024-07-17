@@ -9,8 +9,6 @@ import {
   where,
   doc,
   setDoc,
-  QueryDocumentSnapshot,
-  DocumentData,
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { database, auth, logout, messaging } from "../../firebase/firebase";
@@ -110,7 +108,13 @@ export const Dashboard = () => {
   return (
     <div className="w-full min-h-screen	 absolute bg-slate-400">
       <header className="w-full bg-slate-800 py-2 text-lg text-gray-100 capitalize flex justify-between items-center">
-        <span className="pl-6">Welcome, {name?.split(" ")[0]}</span>
+        <span className="pl-6 mr-5">Welcome, {name?.split(" ")[0]}</span>
+        <div className="flex content-center items-center w-full">
+          <AddPaymentCard
+            docId={`users/${docId}`}
+            fetchUserDocs={fetchUserDocs}
+          />
+        </div>
         <button onClick={() => handleClick()}>
           <img
             className="my-4 mr-8"
@@ -136,18 +140,11 @@ export const Dashboard = () => {
                   fetchUserDocs={fetchUserDocs}
                 />
               ))}
-              <AddPaymentCard
-                docId={`users/${docId}`}
-                fetchUserDocs={fetchUserDocs}
-              />
             </div>
           </div>
         ) : (
           <div className="w-full absolute flex justify-center mt-60">
-            <AddPaymentCard
-              docId={`users/${docId}`}
-              fetchUserDocs={fetchUserDocs}
-            />
+            <h1>There are no payments, try creating one.</h1>
           </div>
         )}
       </main>

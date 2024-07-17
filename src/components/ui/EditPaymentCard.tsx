@@ -12,11 +12,11 @@ export const EditPaymentCard = ({
   const [desc, setDesc] = useState(props.description);
   const [paymentStatus, setPaymentStatus] = useState(props.paymentStatus);
   const [date, setDate] = useState(() => {
-    const givenDate = new Date(props.dueDate?.seconds);
+    const givenDate = new Date(props.dueDate?.seconds * 1000);
     const year = givenDate.getFullYear();
-    let month = givenDate.getMonth() + 1;
+    let month: number | string = givenDate.getMonth() + 1;
     if (month < 10) month = `0${month}`;
-    let day = givenDate.getDate();
+    let day: number | string = givenDate.getDate();
     if (day < 10) day = `0${day}`;
     return `${year}-${month}-${day}`;
   });

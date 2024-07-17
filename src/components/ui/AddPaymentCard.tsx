@@ -1,6 +1,7 @@
 import { addDoc, collection } from "firebase/firestore";
 import { useState, useRef } from "react";
 import { database } from "../../firebase/firebase";
+import { MySwal } from "../utils/swal";
 
 export const AddPaymentCard = ({ docId, fetchUserDocs }) => {
   const [showModal, setShowModal] = useState(false);
@@ -10,22 +11,39 @@ export const AddPaymentCard = ({ docId, fetchUserDocs }) => {
   const dateRef = useRef<HTMLInputElement>(null);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("add-payment");
     setShowModal(false);
+
+    const title = titleRef.current?.value;
+    const description = descRef.current?.value;
+    const paymentStatus = paymentRef.current?.checked;
+    const dueDate = dateRef.current?.value
+      ? new Date(dateRef.current.value)
+      : null;
+
+    if (!title || !description || !dueDate) {
+      MySwal.fire("Error", "All fields are required!", "error");
+      return;
+    }
+
+    console.log(dueDate);
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const res = await addDoc(collection(database, "payment"), {
-        title: titleRef.current.value,
-        description: descRef.current.value,
-        paymentStatus:
-          paymentRef.current.value === "paymentStatus" ? true : false,
-        dueDate: new Date(dateRef.current.value),
+      await addDoc(collection(database, "payment"), {
+        title: title,
+        description: description,
+        paymentStatus: paymentStatus,
+        dueDate: dueDate,
         user: `/${docId}`,
         isDeleted: false,
       });
       fetchUserDocs();
+      MySwal.fire("Success", "Payment added successfully", "success");
     } catch (e) {
       console.error(e);
+      MySwal.fire(
+        "Error",
+        "An error occurred while adding the payment",
+        "error"
+      );
     }
   };
 
@@ -70,9 +88,6 @@ export const AddPaymentCard = ({ docId, fetchUserDocs }) => {
                       placeholder="My First Payment"
                       required
                       ref={titleRef}
-                      onChange={(e) => {
-                        titleRef.current.value = e.target.value;
-                      }}
                     />
                   </div>
                   <div className="mb-6">
@@ -87,7 +102,6 @@ export const AddPaymentCard = ({ docId, fetchUserDocs }) => {
                       className=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Description..."
                       ref={descRef}
-                      onChange={(e) => (descRef.current.value = e.target.value)}
                       required
                     />
                   </div>
@@ -119,9 +133,6 @@ export const AddPaymentCard = ({ docId, fetchUserDocs }) => {
                         type="date"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Select date"
-                        onChange={(e) =>
-                          (dateRef.current.value = e.target.value)
-                        }
                         ref={dateRef}
                       />
                     </div>
@@ -130,9 +141,6 @@ export const AddPaymentCard = ({ docId, fetchUserDocs }) => {
                         type="checkbox"
                         name="payment"
                         value="paymentStatus"
-                        onChange={(e) =>
-                          (paymentRef.current.value = e.target.value)
-                        }
                         ref={paymentRef}
                       />
                       <label htmlFor="payment"> Payment Completed</label>

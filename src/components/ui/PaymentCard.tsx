@@ -8,7 +8,7 @@ export const PaymentCard = ({ props, fetchUserDocs }) => {
   const { title, description, dueDate, paymentStatus } = props;
   const [showModal, setShowModal] = useState(false);
 
-  const transformedDate = new Date(dueDate?.seconds)
+  const transformedDate = new Date(dueDate?.seconds * 1000)
     .toString()
     .split(" GMT")[0];
 
@@ -33,7 +33,7 @@ export const PaymentCard = ({ props, fetchUserDocs }) => {
       <h4 className="text-md font-semibold text-gray-600">
         Payment Status: {paymentStatus ? "Paid" : "Unpaid"}
       </h4>
-      <p className="text-gray-500">Date: {transformedDate}</p>
+      <p className="text-gray-500">Due Date: {transformedDate}</p>
       <div className="w-full flex justify-between mt-4">
         <button
           className="bg-green-600 hover:bg-green-700 text-white border-black border-2 py-2 px-6 rounded transition duration-200"
