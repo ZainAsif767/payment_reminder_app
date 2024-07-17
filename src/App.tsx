@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import SignUp from "./components/ui/signup";
 import SignInSide from "./components/ui/signin";
-import { Dashboard } from "./components/ui/Dashboard";
+import Dashboard from "./components/ui/Dashboard";
 
 function App() {
   return (

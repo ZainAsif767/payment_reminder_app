@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { setDoc, doc } from "firebase/firestore";
 import { database } from "../../firebase/firebase";
 import { useState } from "react";
@@ -24,6 +25,7 @@ export const EditPaymentCard = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     setShowModal(false);
+    console.log(paymentStatus);
     try {
       const changingData = {
         title,
@@ -35,7 +37,6 @@ export const EditPaymentCard = ({
 
       const res = await setDoc(docRef, changingData, { merge: true });
       fetchUserDocs();
-      console.log(res);
     } catch (e) {
       console.error(e);
     }
@@ -87,7 +88,7 @@ export const EditPaymentCard = ({
                     <textarea
                       id="description"
                       className=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Once upon a time in a descriptive payment land"
+                      placeholder="Description..."
                       onChange={(e) => setDesc(() => e.target.value)}
                       required
                       defaultValue={desc}
@@ -128,8 +129,9 @@ export const EditPaymentCard = ({
                       <input
                         type="checkbox"
                         name="payment"
-                        value="paymentStatus"
-                        onChange={(e) => setPaymentStatus(() => e.target.value)}
+                        onChange={(e) =>
+                          setPaymentStatus(() => e.target.checked)
+                        }
                         defaultChecked={paymentStatus}
                       />
                       <label htmlFor="payment"> Payment Completed</label>
@@ -138,9 +140,9 @@ export const EditPaymentCard = ({
                   </div>
                 </div>
                 {/*footer*/}
-                <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
+                <div className="flex items-center justify-center p-6 border-t border-solid border-slate-200 rounded-b">
                   <button
-                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    className="bg-red-500 text-white  active:bg-red-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"
                     onClick={() => setShowModal(false)}
                   >

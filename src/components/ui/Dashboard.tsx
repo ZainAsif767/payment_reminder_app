@@ -18,7 +18,7 @@ import { AddPaymentCard } from "./AddPaymentCard";
 import { getToken } from "firebase/messaging";
 import { MySwal } from "../utils/swal";
 
-export const Dashboard = () => {
+export default function Dashboard() {
   const [name, setName] = useState("");
   const [docId, setDocId] = useState<string>("");
   const [payments, setPayments] = useState([]);
@@ -164,4 +164,4 @@ export const Dashboard = () => {
       </main>
     </div>
   );
-};
+}
