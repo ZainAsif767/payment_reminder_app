@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-undef */
 import functions from "firebase-functions"
 import admin from "firebase-admin"
 
@@ -6,7 +6,7 @@ admin.initializeApp();
 
 exports.sendPaymentReminder = functions.pubsub
     //The below statement runs a cron job scheduled for  everyday
-    .schedule('every 24 hours').onRun(async (context) => {
+    .schedule('every 24 hours').onRun(async () => {
         const database = admin.firestore();
         const now = admin.firestore.Timestamp.now();
         const unpaidPaymentsQuery = database.collection('payments')
