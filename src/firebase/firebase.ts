@@ -5,13 +5,13 @@ import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, sendPasswo
 import { getMessaging } from "firebase/messaging";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDSxYae6HwLhzOSv7bAsG8KP5NrZ-PynDw",
-    authDomain: "payment-reminder-app-b1f7c.firebaseapp.com",
-    projectId: "payment-reminder-app-b1f7c",
-    storageBucket: "payment-reminder-app-b1f7c.appspot.com",
-    messagingSenderId: "1046232119776",
-    appId: "1:1046232119776:web:65d881bc8981924fd39385",
-    measurementId: "G-0EEJSPRDPX"
+    apiKey: import.meta.env.VITE_FIREBASE_APIKEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase

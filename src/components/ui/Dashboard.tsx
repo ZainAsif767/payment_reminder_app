@@ -30,8 +30,7 @@ async function requestPermission(docId) {
   if (docId) {
     try {
       const token = await getToken(messaging, {
-        vapidKey:
-          "BF1tVVetk1cdNgYb8Hfaa_fzVOuNGmWYkOIILgxF7CEKvYXxOrb2eXOIA34mcU2TJcAUTqdgMLAhQuR-ukHB2gg",
+        vapidKey: import.meta.env.VITE_VAPID_KEY,
       });
       localStorage.setItem("firebaseMessagingToken", token);
       const docRef = doc(database, `users/${docId}`);
