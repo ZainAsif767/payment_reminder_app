@@ -11,7 +11,6 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import signinBackgroundImage from "../../assets/Images";
 import { useNavigate } from "react-router-dom";
 import {
   loginInWithEmailAndPassword,
@@ -118,7 +117,7 @@ export default function SignInSide() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: signinBackgroundImage,
+            backgroundImage: 'url("../../../public/sign-in-bg.png")',
             backgroundColor: (t) =>
               t.palette.mode === "light"
                 ? t.palette.grey[50]
