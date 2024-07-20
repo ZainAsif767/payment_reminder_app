@@ -6,7 +6,14 @@ export default {
     "./src/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      width: {
+        '30p': '30%',
+        '47p': '47.33%',
+        '31p': '31%',
+        '23p': '23%',
+      }
+    },
   },
   plugins: [],
 }
