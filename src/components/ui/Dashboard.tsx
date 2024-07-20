@@ -118,7 +118,7 @@ export default function Dashboard() {
     MySwal.fire({
       title: "Are you sure?",
       text: "Do you want to sign out?",
-      icon: "warning",
+      icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
@@ -127,7 +127,7 @@ export default function Dashboard() {
       if (result.isConfirmed) {
         logout();
         navigate("/");
-        toast.fire("", "signed out successfully!");
+        toast.fire("", "signed out successfully!", "success");
       }
     });
   };
