@@ -3,6 +3,7 @@ import { useState } from "react";
 import { doc, setDoc } from "firebase/firestore";
 import { database } from "../../firebase/firebase";
 import { EditPaymentCard } from "./EditPaymentCard";
+import { MySwal, toast } from "../utils/swal";
 
 export const PaymentCard = ({ props, fetchUserDocs }) => {
   const { title, description, dueDate, paymentStatus } = props;
@@ -13,19 +14,44 @@ export const PaymentCard = ({ props, fetchUserDocs }) => {
   ).toLocaleDateString();
 
   const handleDelete = () => {
-    const docRef = doc(database, "payment", props.id);
-    setDoc(docRef, { isDeleted: true }, { merge: true })
-      .then(() => {
-        console.log("Deletion successful");
-        fetchUserDocs();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    MySwal.fire({
+      title: "Are you sure you?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const docRef = doc(database, "payment", props.id);
+        setDoc(docRef, { isDeleted: true }, { merge: true })
+          .then(() => {
+            toast.fire({
+              icon: "success",
+              position: "top-right",
+              title: "Payment Deleted Successfully",
+              toast: true,
+              timerProgressBar: true,
+            });
+            fetchUserDocs();
+          })
+          .catch((error) => {
+            toast.fire({
+              icon: "error",
+              position: "top-right",
+              title: "Error deleting payment",
+              toast: true,
+              timerProgressBar: true,
+            });
+            console.log(error);
+          });
+      }
+    });
   };
 
   return (
-    <div className="max-sm:w-full max-md:w-5/12 max-lg:w-2/6 max-xl:w-2/6 max-2xl:w-3/12 2xl:w-3/12 flex flex-col border-2 border-black rounded p-6 gap-4 bg-gray-100 shadow-lg">
+    <div className="max-sm:w-full max-md:w-5/12 max-lg:w-47p max-xl:w-30p max-2xl:w-31p 2xl:w-23p flex flex-col border-2 border-black rounded p-6 gap-4 bg-gray-100 shadow-lg">
       <h3 className="text-3xl text-center font-bold text-gray-800"> {title}</h3>
       <h4 className="text-lg font-semibold text-gray-700">{description}</h4>
       <h4 className="text-md font-semibold text-gray-600">
