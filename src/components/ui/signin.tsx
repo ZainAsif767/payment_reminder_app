@@ -20,18 +20,37 @@ import {
 import { MySwal, toast } from "../utils/swal";
 import GoogleIcon from "../../assets/google.svg";
 import Copyright from "../utils/Copyright";
+import { createRef, useState } from "react";
+import {
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const defaultTheme = createTheme();
 
 export default function SignInSide() {
   const navigate = useNavigate();
-  const [email, setEmail] = React.useState("");
+  const [email, setEmail] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const passwordRef = createRef<HTMLInputElement>();
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email = data.get("email") as string;
-    const password = data.get("password") as string;
+    const password = passwordRef.current.value;
 
     try {
       const res = await loginInWithEmailAndPassword(email, password);
@@ -130,16 +149,30 @@ export default function SignInSide() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
+              <FormControl sx={{ mt: 2, width: "100%" }} variant="outlined">
+                <InputLabel htmlFor="password">Password *</InputLabel>
+                <OutlinedInput
+                  id="password"
+                  name="password"
+                  inputRef={passwordRef}
+                  required
+                  fullWidth
+                  type={showPassword ? "text" : "password"}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Password"
+                ></OutlinedInput>
+              </FormControl>
 
               <Button
                 type="submit"

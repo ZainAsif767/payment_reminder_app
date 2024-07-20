@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Copyright from "../utils/Copyright";
-import React from "react";
+import React, { useState } from "react";
 import {
   getSignInMethodsForEmail,
   sendPasswordReset,
@@ -24,42 +24,52 @@ const defaultTheme = createTheme();
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(false);
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    if (emailError) {
+      setEmailError(!validateEmail(e.target.value));
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    const email = data.get("email") as string;
+    const isValidEmail = validateEmail(email);
+    setEmailError(!isValidEmail);
 
-    if (!email) {
-      toast.fire("", "Please Enter a valid email", "error");
-      return;
-    }
-
-    try {
-      const signInMethods = await getSignInMethodsForEmail(email);
-
-      console.log(signInMethods);
-      await sendPasswordReset(email);
-      toast
-        .fire({
-          icon: "success",
-          text: "Reset Password Link Sent!",
+    if (isValidEmail) {
+      try {
+        const signInMethods = await getSignInMethodsForEmail(email);
+        console.log(signInMethods);
+        await sendPasswordReset(email);
+        toast
+          .fire({
+            icon: "success",
+            text: "Reset Password Link Sent!",
+            timerProgressBar: true,
+          })
+          .then(() => navigate("/"));
+      } catch (error) {
+        console.error("Error during password reset:", error);
+        toast.fire({
+          icon: "error",
+          text: "Something went wrong, try again",
           timerProgressBar: true,
-        })
-        .then(() => navigate("/"));
-    } catch (err) {
-      console.error(err);
-      toast.fire({
-        icon: "error",
-        text: "something went wrong, try again",
-        timerProgressBar: true,
-      });
+        });
+      }
     }
   };
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Container component="main" sx={{ height: "100vh" }}>
+      <Container component="main" sx={{ height: "70vh" }}>
         <CssBaseline />
         <Box
           sx={{
@@ -73,7 +83,7 @@ export default function ForgotPassword() {
             <LockOpenIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Forgot Password ?
+            Forgot Password?
           </Typography>
           <Box
             component="form"
@@ -84,12 +94,16 @@ export default function ForgotPassword() {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
+                  error={emailError}
                   required
                   fullWidth
                   id="email"
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  value={email}
+                  onChange={handleEmailChange}
+                  helperText={emailError ? "Invalid Email Address" : ""}
                 />
               </Grid>
             </Grid>
