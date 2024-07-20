@@ -19,24 +19,7 @@ import {
 } from "../../firebase/firebase";
 import { MySwal, toast } from "../utils/swal";
 import GoogleIcon from "../../assets/google.svg";
-
-function Copyright(props: any) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Payment Reminder App
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import Copyright from "../utils/Copyright";
 
 const defaultTheme = createTheme();
 
@@ -79,19 +62,6 @@ export default function SignInSide() {
         title: "Login Failed",
         text: "An error occurred during login. Please try again later.",
       });
-    }
-  };
-
-  const handleForgotPassword = async () => {
-    try {
-      await sendPasswordReset(email);
-      toast.fire({
-        icon: "success",
-        text: "Reset Password Link sent!",
-        timerProgressBar: true,
-      });
-    } catch (err) {
-      console.error(err);
     }
   };
 
@@ -205,7 +175,7 @@ export default function SignInSide() {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link variant="body2" onClick={handleForgotPassword}>
+                  <Link href="/resetpassword" variant="body2">
                     Forgot password?
                   </Link>
                 </Grid>

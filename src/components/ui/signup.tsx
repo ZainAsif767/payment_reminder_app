@@ -21,24 +21,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useEffect } from "react";
 import { MySwal, toast } from "../utils/swal";
 import GoogleIcon from "../../assets/google.svg";
-
-function Copyright(props: any) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Payment Reminder App
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import Copyright from "../utils/Copyright";
 
 const defaultTheme = createTheme();
 export default function SignUp() {
@@ -162,7 +145,7 @@ export default function SignUp() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 1 }}
             >
               Sign Up
             </Button>
