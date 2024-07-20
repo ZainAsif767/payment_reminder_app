@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { initializeApp } from "firebase/app";
 import { addDoc, collection, getFirestore } from "firebase/firestore";
-import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, User, UserCredential } from "firebase/auth";
+import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail, getAuth, GoogleAuthProvider, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, User, UserCredential } from "firebase/auth";
 import { getMessaging } from "firebase/messaging";
 
 const firebaseConfig = {
@@ -58,6 +58,18 @@ const loginWithGoogle = async () => {
     }
 }
 
+const getSignInMethodsForEmail = async (email: any) => {
+    try {
+        const signInMethods = await fetchSignInMethodsForEmail(auth, email)
+        console.log(signInMethods)
+        return signInMethods;
+    } catch (error) {
+        console.error("Error Fetching sign-in methods:", error)
+        throw error;
+    }
+}
+
+
 const sendPasswordReset = async (email: any) => {
     try {
         await sendPasswordResetEmail(auth, email);
@@ -72,5 +84,5 @@ const logout = () => {
 }
 
 export {
-    auth, database, loginInWithEmailAndPassword, loginWithGoogle, registerWithEmailAndPassword, sendPasswordReset, logout, messaging
+    auth, database, loginInWithEmailAndPassword, loginWithGoogle, registerWithEmailAndPassword, getSignInMethodsForEmail, sendPasswordReset, logout, messaging
 }

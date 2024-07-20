@@ -12,25 +12,41 @@ import {
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Copyright from "../utils/Copyright";
 import React from "react";
-import { sendPasswordReset } from "../../firebase/firebase";
+import {
+  getSignInMethodsForEmail,
+  sendPasswordReset,
+} from "../../firebase/firebase";
 import { toast } from "../utils/swal";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
+import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
 export default function ForgotPassword() {
+  const navigate = useNavigate();
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const email = data.get("email") as string;
 
+    if (!email) {
+      toast.fire("", "Please Enter a valid email", "error");
+      return;
+    }
+
     try {
+      const signInMethods = await getSignInMethodsForEmail(email);
+
+      console.log(signInMethods);
       await sendPasswordReset(email);
-      toast.fire({
-        icon: "success",
-        text: "Reset Password Link Sent!",
-        timerProgressBar: true,
-      });
+      toast
+        .fire({
+          icon: "success",
+          text: "Reset Password Link Sent!",
+          timerProgressBar: true,
+        })
+        .then(() => navigate("/"));
     } catch (err) {
       console.error(err);
       toast.fire({
@@ -43,7 +59,7 @@ export default function ForgotPassword() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs">
+      <Container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
         <Box
           sx={{
@@ -63,7 +79,7 @@ export default function ForgotPassword() {
             component="form"
             noValidate
             onSubmit={handleSubmit}
-            sx={{ mt: 3 }}
+            sx={{ mt: 3, width: "35%" }}
           >
             <Grid container spacing={2}>
               <Grid item xs={12}>
