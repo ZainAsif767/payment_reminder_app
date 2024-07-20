@@ -150,12 +150,16 @@ export const AddPaymentCard = ({ docId, fetchUserDocs }) => {
                         min={minDate}
                       />
                     </div>
-                    <div className="text-white mt-4 -mb-10">
+                    <div className="text-white mt-4 -mb-10 flex content-start items-center gap-1">
                       <input
                         type="checkbox"
                         name="payment"
                         value="paymentStatus"
                         ref={paymentRef}
+                        style={{
+                          width: "16px",
+                          height: "16px",
+                        }}
                       />
                       <label htmlFor="payment"> Payment Completed</label>
                     </div>
@@ -163,7 +167,7 @@ export const AddPaymentCard = ({ docId, fetchUserDocs }) => {
                   </div>
                 </div>
                 {/*footer*/}
-                <div className="flex items-center justify-center p-6 border-t border-solid border-slate-200 rounded-b">
+                <div className="flex items-center justify-center p-6 border-t border-solid border-slate-200 rounded-b gap-8">
                   <button
                     className="bg-red-500 text-white active:bg-red-600 font-bold  uppercase px-6 py-3 rounded shadow text-sm hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"
