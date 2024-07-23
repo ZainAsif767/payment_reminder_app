@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
-import functions from "firebase-functions"
-import admin from "firebase-admin"
+const functions = require("firebase-functions");
+const admin = require("firebase-admin");
 
 admin.initializeApp();
 
@@ -10,16 +10,21 @@ exports.sendPaymentReminder = functions.pubsub
         const database = admin.firestore();
         const now = admin.firestore.Timestamp.now();
         const unpaidPaymentsQuery = database.collection('payments')
-            .where('paymentStatus', '==', 'unpaid')
+            .where('paymentStatus', '==', false)
             .where('dueDate', '<=', now);
 
         const unpaidPaymentsSnapshot = await unpaidPaymentsQuery.get();
+        const userIds = unpaidPaymentsSnapshot.docs.map(doc => doc.data().userId);
 
-        unpaidPaymentsSnapshot.forEach(async (doc) => {
+        const userDocs = await database.collection('users').where('userId', 'in', userIds).get();
+        const userDataMap = userDocs.docs.reduce((map, doc) => {
+            map[doc.id] = doc.data();
+            return map;
+        }, {});
+        const promises = unpaidPaymentsSnapshot.docs.map(async (doc) => {
             const paymentData = doc.data();
-            const userId = paymentData.userId; // Assume each payment has a userId field
-            const userDoc = await database.collection('users').doc(userId).get();
-            const userData = userDoc.data();
+            const userId = paymentData.userId;
+            const userData = userDataMap[userId];
 
             if (userData && userData.fcmToken) {
                 const message = {
@@ -38,4 +43,6 @@ exports.sendPaymentReminder = functions.pubsub
                 }
             }
         });
+
+        await Promise.all(promises);
     });
