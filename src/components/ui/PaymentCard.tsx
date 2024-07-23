@@ -51,7 +51,7 @@ export const PaymentCard = ({ props, fetchUserDocs }) => {
   };
 
   return (
-    <div className="max-sm:w-full max-md:w-5/12 max-lg:w-47p max-xl:w-30p max-2xl:w-31p 2xl:w-23p flex flex-col border-2 border-black rounded p-6 gap-4 bg-gray-100 shadow-lg">
+    <div className="max-sm:w-full max-md:w-5/12 max-lg:w-47p max-xl:w-30p max-2xl:w-31p 2xl:w-23p flex flex-col  rounded p-6 gap-4 bg-gray-100 shadow-lg">
       <h3 className="text-3xl text-center font-bold text-gray-800"> {title}</h3>
       <h4 className="text-lg font-semibold text-gray-700">{description}</h4>
       <h4 className="text-md font-semibold text-gray-600">
@@ -60,13 +60,13 @@ export const PaymentCard = ({ props, fetchUserDocs }) => {
       <p className="text-gray-500">Due Date: {transformedDate}</p>
       <div className="w-full flex justify-between mt-4">
         <button
-          className="bg-green-600 hover:bg-green-700 text-white border-black border-2 py-2 px-6 rounded transition duration-200"
+          className="bg-green-600 hover:bg-green-700 text-white  py-2 px-6 rounded transition duration-200"
           onClick={() => setShowModal((show) => !show)}
         >
           Edit
         </button>
         <button
-          className="bg-red-500 hover:bg-red-600 text-white border-black border-2 py-2 px-6 rounded transition duration-200"
+          className="bg-red-500 hover:bg-red-600 text-white  py-2 px-6 rounded transition duration-200"
           onClick={() => handleDelete()}
         >
           Delete
