@@ -17,6 +17,7 @@ import { PaymentCard } from "./PaymentCard";
 import { AddPaymentCard } from "./AddPaymentCard";
 import { getToken, onMessage } from "firebase/messaging";
 import { MySwal, toast } from "../utils/swal";
+import { Box, Button, Modal, Typography } from "@mui/material";
 
 async function requestPermission(docId) {
   const permission = await Notification.requestPermission();
@@ -53,6 +54,8 @@ export default function Dashboard() {
   const [name, setName] = useState("");
   const [docId, setDocId] = useState<string>("");
   const [payments, setPayments] = useState([]);
+  const [duePayments, setDuePayments] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
   const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
 
@@ -93,7 +96,7 @@ export default function Dashboard() {
     }
   };
 
-  const fetchUserDocs = async () => {
+  const fetchUserDocs = async (showDuePayments: boolean = true) => {
     try {
       const q = query(collection(database, "payment"));
       const doc = await getDocs(q);
@@ -108,9 +111,21 @@ export default function Dashboard() {
         return { ...res, id: d.id };
       });
       setPayments(() => [...userDocs]);
+      checkDuePayments(userDocs, showDuePayments);
     } catch (err) {
       console.error(err);
       alert("An error occured while fetching user documents");
+    }
+  };
+
+  const checkDuePayments = (payments, showDuePayments) => {
+    const now = new Date().getTime() / 1000;
+    const duePayments = payments.filter(
+      (payments) => payments.dueDate.seconds <= now && !payments.paymentStatus
+    );
+    if (duePayments.length > 0) {
+      setDuePayments(duePayments);
+      if (showDuePayments) setModalOpen(true);
     }
   };
 
@@ -133,9 +148,9 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="w-full min-h-screen	 absolute bg-slate-400">
+    <div className="w-full min-h-screen	 absolute bg-slate-300">
       <header className="w-full bg-slate-800 py-2 text-lg text-gray-100 capitalize flex justify-between items-center">
-        <span className="pl-6">Welcome, {name?.split(" ")[0]}</span>
+        <span className="pl-6 text-xl">Welcome, {name?.split(" ")[0]}</span>
         <div className="contents content-center items-center w-full">
           <AddPaymentCard
             docId={`users/${docId}`}
@@ -168,6 +183,72 @@ export default function Dashboard() {
                 />
               ))}
             </div>
+            <div className="flex justify-center items-center mt-4 gap-5">
+              <button
+                className="bg-sky-500 p-4 text-white rounded-md"
+                onClick={() => setModalOpen(true)}
+              >
+                Due Payments
+              </button>
+            </div>
+            <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: 400,
+                  bgcolor: "background.paper",
+                  boxShadow: 24,
+                  p: 4,
+                  borderRadius: 2,
+                }}
+              >
+                <Typography variant="h5" sx={{ textAlign: "center", mb: 2 }}>
+                  Due Payments
+                </Typography>
+                {duePayments.length > 0 ? (
+                  duePayments.map((payment) => (
+                    <Box
+                      key={payment.id}
+                      sx={{
+                        mb: 2,
+                        p: 2,
+                        border: "1px solid #ddd",
+                        borderRadius: 1,
+                      }}
+                    >
+                      <Typography variant="body1">
+                        <strong>Title:</strong> {payment.title}
+                      </Typography>
+                      <Typography variant="body2">
+                        <strong>Description:</strong> {payment.description}
+                      </Typography>
+                      <Typography variant="body2">
+                        <strong>Due Date:</strong>{" "}
+                        {new Date(
+                          payment.dueDate.seconds * 1000
+                        ).toLocaleDateString()}
+                      </Typography>
+                    </Box>
+                  ))
+                ) : (
+                  <Typography sx={{ textAlign: "center" }}>
+                    There no due payments.
+                  </Typography>
+                )}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  onClick={() => setModalOpen(false)}
+                  sx={{ mt: 2 }}
+                >
+                  Close
+                </Button>
+              </Box>
+            </Modal>
           </div>
         ) : (
           <div className="w-full absolute flex justify-center mt-60">
