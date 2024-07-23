@@ -18,7 +18,6 @@ import { AddPaymentCard } from "./AddPaymentCard";
 import { getToken, onMessage } from "firebase/messaging";
 import { MySwal, toast } from "../utils/swal";
 import { Box, Button, Modal, Typography } from "@mui/material";
-import addNotification from "react-push-notification";
 
 async function requestPermission(docId) {
   const permission = await Notification.requestPermission();
@@ -81,17 +80,6 @@ export default function Dashboard() {
     if (error) console.error(error.message);
     fetchUserName();
   }, [user, loading, error]);
-
-  // to send push notification from browser
-  // const buttonClick = () => {
-  //   addNotification({
-  //     title: "Warning",
-  //     subtitle: "This is a subtitle",
-  //     message: "This is a very long message",
-  //     theme: "darkblue",
-  //     native: true, // when using native, your OS will handle theming.
-  //   });
-  // };
 
   const fetchUserName = async () => {
     try {
@@ -202,12 +190,6 @@ export default function Dashboard() {
               >
                 Due Payments
               </button>
-              {/* <button
-                className="bg-red-400 p-4 text-white rounded-md"
-                onClick={buttonClick}
-              >
-                Notify
-              </button> */}
             </div>
             <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
               <Box

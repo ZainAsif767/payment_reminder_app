@@ -4,12 +4,10 @@ import SignUp from "./components/ui/signup";
 import SignInSide from "./components/ui/signin";
 import Dashboard from "./components/ui/Dashboard";
 import ForgotPassword from "./components/ui/ForgotPassword";
-import { Notifications } from "react-push-notification";
 
 function App() {
   return (
     <div className="app">
-      {/* <Notifications /> */}
       <main className="#">
         <div className="#">
           <Routes>
