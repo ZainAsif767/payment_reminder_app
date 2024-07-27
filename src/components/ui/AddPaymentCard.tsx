@@ -85,7 +85,7 @@ export const AddPaymentCard = ({ docId, fetchUserDocs }) => {
                   <div className="mb-6">
                     <label
                       htmlFor="title"
-                      className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+                      className="block mb-2 text-lg font-medium text-gray-900 dark:text-black"
                     >
                       Title
                     </label>
@@ -101,7 +101,7 @@ export const AddPaymentCard = ({ docId, fetchUserDocs }) => {
                   <div className="mb-6">
                     <label
                       htmlFor="description"
-                      className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+                      className="block mb-2 text-lg font-medium text-gray-900 dark:text-black"
                     >
                       Description
                     </label>
@@ -116,7 +116,7 @@ export const AddPaymentCard = ({ docId, fetchUserDocs }) => {
                   <div className="mb-6">
                     <label
                       htmlFor="date"
-                      className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+                      className="block mb-2 text-lg font-medium text-gray-900 dark:text-black"
                     >
                       Due Date
                     </label>
